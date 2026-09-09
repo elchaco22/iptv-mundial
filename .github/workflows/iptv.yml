@@ -1,0 +1,24 @@
+name: IPTV Auto-Update
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Crear listas
+        run: |
+          echo "#EXTM3U" > Argentina_ACTIVOS.m3u
+          echo "#EXTINF:-1, C5N" >> Argentina_ACTIVOS.m3u
+          echo "https://www.youtube.com/watch?v=test" >> Argentina_ACTIVOS.m3u
+          cp Argentina_ACTIVOS.m3u MUNDIAL_ACTIVOS.m3u
+          cp Argentina_ACTIVOS.m3u TODOS.m3u
+      - name: Guardar
+        run: |
+          git config user.name "elchaco22"
+          git config user.email "elchaco22@github.com"
+          git add *.m3u
+          git commit -m "Crear listas" || true
+          git push
